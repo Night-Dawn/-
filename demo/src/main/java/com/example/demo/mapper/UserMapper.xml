@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <select id="Userlist" resultType="User">
+        select *
+        from user
+        <where>
+            <if test="User_id != null">
+                and User_id like '%${User_id}%'
+            </if>
+
+            <if test="User_name!=null">
+                and User_name like '%${User_name}%'
+            </if>
+        </where>
+        limit #{page}, #{pageSize}
+    </select>
+    <select id="usernumber" resultType="Integer">
+        select count(*)
+        from user
+    </select>
+    <select id="checkUser" resultType="User">
+        select *
+        from user
+        where User_id =#{User_id}
+    </select>
+    <insert id="addUser">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="User_id !=null ">
+                User_id,
+            </if>
+            <if test="User_name !=null">
+                User_name,
+            </if>
+            <if test="User_sex !=null  ">
+                User_sex,
+            </if>
+            <if test="User_address !=null">
+                User_address,
+            </if>
+            <if test="User_phone !=null ">
+                User_phone,
+            </if>
+            <if test="User_username !=null ">
+                User_username,
+            </if>
+            <if test="User_password !=null ">
+                User_password,
+            </if>
+            <if test="User_borrow_max !=null">
+                User_borrow_max,
+            </if>
+            <if test="User_borrow_number !=null ">
+                User_borrow_number,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="User_id != null ">
+                #{User_id,jdbcType=INTEGER},
+            </if>
+            <if test="User_name != null ">
+                #{User_name,jdbcType=VARCHAR},
+            </if>
+            <if test="User_sex != null ">
+                #{User_sex,jdbcType=VARCHAR},
+            </if>
+            <if test="User_address != null ">
+                #{User_address,jdbcType=VARCHAR},
+            </if>
+            <if test="User_phone != null ">
+                #{User_phone,jdbcType=VARCHAR},
+            </if>
+            <if test="User_username != null">
+                #{User_username,jdbcType=VARCHAR},
+            </if>
+            <if test="User_password != null ">
+                #{User_password,jdbcType=VARCHAR},
+            </if>
+            <if test="User_borrow_max != null">
+                #{User_borrow_max,jdbcType=INTEGER},
+            </if>
+            <if test="User_borrow_number != null ">
+                #{User_borrow_number,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateUser">
+        update user
+        <set>
+            <if test="User_name != null ">
+                User_name=#{User_name,jdbcType=VARCHAR},
+            </if>
+            <if test="User_sex != null ">
+                User_sex=#{User_sex,jdbcType=VARCHAR},
+            </if>
+            <if test="User_address != null ">
+                User_address=#{User_address,jdbcType=VARCHAR},
+            </if>
+            <if test="User_phone != null ">
+                User_phone=#{User_phone,jdbcType=VARCHAR},
+            </if>
+            <if test="User_username != null">
+                User_username=#{User_username,jdbcType=VARCHAR},
+            </if>
+            <if test="User_password != null ">
+                User_password=#{User_password,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where User_id= #{User_id,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteUser">
+         delete from user where User_id= #{User_id,jdbcType=INTEGER}
+    </delete>
+    <select id="isCount" parameterType="Integer" resultType="Integer">
+        select u.User_borrow_number
+        from user u
+        where u.User_id = #{User_id}
+    </select>
+    <select id="getUser" parameterType="String"  resultType="User">
+        select *
+        from user
+        where User_username = #{User_username}
+    </select>
+    <update id="updateCount">
+        update user
+        <set>
+            <if test="User_borrow_number != null ">
+                User_borrow_number=#{User_borrow_number,jdbcType=INTEGER},
+            </if>
+        </set>
+        where User_id= #{User_id,jdbcType=INTEGER}
+    </update>
+</mapper>

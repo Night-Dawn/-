@@ -1,0 +1,21 @@
+server:
+  port: 8088
+mysql:
+    url: jdbc:mysql://localhost:3306/demo?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: root
+    password: root
+spring:
+  mvc:
+    static-path-pattern: /**
+  thymeleaf:
+    cache: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${mysql.url}
+    username: ${mysql.username}
+    password: ${mysql.password}
+mybatis:
+  mapper-locations: classpath*:com/example/demo/mapper/**/*.xml
+  type-aliases-package: com.example.demo.entity
+
+

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.BorrowMapper">
+    <select id="Borrowlist" resultType="Borrow">
+        select *
+        from borrow b
+        <where>
+            <if test="Borrow_id != null">
+                and b.Borrow_id like '%${Borrow_id}%'
+            </if>
+
+            <if test="Book_id!=null">
+                and b.Book_id like '%${Book_id}%'
+            </if>
+            <if test="User_id!=null">
+                and b.User_id like '%${User_id}%'
+            </if>
+        </where>
+        limit #{page}, #{pageSize}
+    </select>
+    <select id="Borrownumber" resultType="Integer">
+        select count(*)
+        from borrow
+    </select>
+    <update id="Borrowupdate">
+       update borrow
+        <set>
+            <if test="Book_id!=null">
+                Book_id= #{Book_id,jdbcType=BIGINT},
+            </if>
+            <if test="User_id">
+                User_id= #{User_id,jdbcType=INTEGER},
+            </if>
+            <if test="Borrow_date">
+                Borrow_date= #{Borrow_date},
+            </if>
+            <if test="Return_date">
+                Return_date= #{Return_date},
+            </if>
+        </set>
+       where Borrow_id= #{Borrow_id,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteBorrow">
+        delete from borrow where Borrow_id =#{Borrow_id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insertBorrow">
+        insert into borrow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Book_id !=null ">
+                Book_id,
+            </if>
+            <if test="User_id !=null">
+                User_id,
+            </if>
+            <if test="Borrow_date !=null  ">
+                Borrow_date,
+            </if>
+            <if test="Return_date !=null">
+                Return_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Book_id != null ">
+                #{Book_id,jdbcType=BIGINT},
+            </if>
+            <if test="User_id != null ">
+                #{User_id,jdbcType=INTEGER},
+            </if>
+            <if test="Borrow_date !=null  ">
+                #{Borrow_date},
+            </if>
+            <if test="Return_date !=null">
+                #{Return_date},
+            </if>
+        </trim>
+    </insert>
+    <delete id="deleteUserBorrow">
+        delete from borrow
+        where borrow.Book_id =  #{Book_id,jdbcType=BIGINT} and borrow.User_id =#{User_id,jdbcType=INTEGER}
+    </delete>
+    <select id="getBorrow" parameterType="Integer" resultType="Borrow">
+        select *
+        from borrow
+        where Borrow_id = #{Borrow_id}
+    </select>
+    <select id="borrowBook" parameterType="Integer" resultMap="resultBookMap">
+        select b.*,br.*
+        from borrow br,books b,user u
+        where br.User_id = u.User_id and b.Book_id = br.Book_id
+        and u.User_id = #{User_id}
+    </select>
+    <resultMap id="resultBookMap" type="Book">
+        <id property="Book_id" column="Book_id"/>
+        <result property="Book_name" column="Book_name"/>
+        <result property="Book_writer" column="Book_writer"/>
+        <result property="Book_company" column="Book_company"/>
+        <result property="Book_date" column="Book_date"/>
+        <result property="Book_brief" column="Book_brief"/>
+        <result property="Book_img" column="Book_img"/>
+        <result property="Book_price" column="Book_price"/>
+        <result property="Book_number" column="Book_number"/>
+        <collection property="borrows" ofType="Borrow">
+            <id property="Borrow_id" column="Borrow_id"/>
+            <result property="Book_id" column="Book_id"/>
+            <result property="User_id" column="User_id"/>
+            <result property="Borrow_date" column="Borrow_date"/>
+            <result property="Return_date" column="Return_date"/>
+        </collection>
+    </resultMap>
+</mapper>
